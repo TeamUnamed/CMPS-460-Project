@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Full Project" pattern="file[CMPS-460-Project]:*/" />
+</component>
