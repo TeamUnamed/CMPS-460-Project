@@ -8,19 +8,14 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . '/SQLProject/constants.php';
 
     class SQLConnection {
-        private string $server;
-        private string $username;
-        private string $password;
-        private string $database;
         private mysqli $connection;
         private mysqli_sql_exception | null $exception;
+        public string | null $sql;
 
         private bool $connected = false;
 
         public function __construct(string $server, string $username, string $password) {
-            $this -> server = $server;
-            $this -> username = $username;
-            $this -> password = $password;
+
         }
 
         public function connect() : SQLConnection {
@@ -49,7 +44,6 @@
 
                     if (!$success) return false;
 
-                    $this -> database = $database;
                 }
 
                 return false;
@@ -115,8 +109,10 @@
             if ($cols_size > 0)
                 $str_cols .= ') ';
 
+            $this->sql = "INSERT INTO $table VALUES $str_cols ($str_vars)";
+
             try {
-                $this -> connection -> query("INSERT INTO $table VALUES $str_cols ($str_vars)");
+                $this -> connection -> query($this->sql);
             } catch (mysqli_sql_exception $exception) {
                 $this -> exception = $exception;
                 return false;
@@ -152,7 +148,7 @@
             }
 
             $str_col = $multi_col ? $col[0] : $col;
-            $str_where = $has_where ? 'WHERE '($multi_where ? $where[0] : $where) : '';
+            $str_where = $has_where ? 'WHERE ' . ($multi_where ? $where[0] : $where) : '';
 
             for ($i = 1; $multi_col && $i < count($col); $i++) {
                 if ($col[$i] != '')
@@ -161,11 +157,13 @@
 
             for ($i = 1; $multi_where && $i < count($where); $i++) {
                 if ($where[$i] != '')
-                    $str_where .= ", $where[$i]";
+                    $str_where .= " AND $where[$i]";
             }
 
+            $this->sql = "SELECT $str_col FROM $table $str_where";
+
             try {
-                return $this->connection->query("SELECT $str_col FROM $table $str_where");
+                return $this->connection->query($this->sql);
             } catch (mysqli_sql_exception $exception) {
                 $this->exception = $exception;
                 return false;
