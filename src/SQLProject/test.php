@@ -18,12 +18,12 @@
         <input type="submit" />
     </form>
     <?php
-        $test = ['cake','pizza'];
-        $test += ['fruit' => 'apple'];
-//        print $test['fruit'] . '<br>';
-        foreach ($test as $k => $v) {
-            print $k . ' : ' . $v . ' | ' . (is_string($k) ? "$k => " : "") . gettype($v) .  '<br>';
-        }
+        $a = 'hello';
+        print '?' . is_string($a) . '<br>';
+        print '?' . is_array($a) . '<br>';
+        $a = ['hello'];
+        print '?' . is_string($a) . '<br>';
+        print '?' . is_array($a) . '<br>';
     ?>
 </body>
 <script>

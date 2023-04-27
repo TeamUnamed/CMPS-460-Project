@@ -3,7 +3,10 @@
 <head>
     <?php
     include "util/FormUtil.php";
+    include "util/SQLConnection.php";
     include "generic/header_generic.html";
+
+    use SQLProject\util\SQLConnection;
     ?>
     <title>Lookup Patient</title>
 </head>
@@ -33,5 +36,33 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     echo "</p><p>";
 
     echo "</p>";
+
+    $conn = new SQLConnection(SERVER, USERNAME, PASSWORD);
+    $conn->connect();
+    $result = $conn->selectDatabase(DATABASE, true);
+    print "Connected:: " . ($result ? "Yes" : "No") . "<br>";
+
+    $result = $conn->select('Customers', '*');
+    print $result->num_rows . " rows";
+    if ($result->num_rows > 0) {
+        print '<table>'
+            . '<tr>'
+            . '<th>ID</th>'
+            . '<th>First Name</th>'
+            . '<th>Last Name</th>'
+            . '<th>Birth Date</th>'
+            . '<th>Address</th>'
+            . '</tr>';
+        while ($row = $result->fetch_assoc()) {
+            print '<tr>'
+                . '<td>' . $row['id'] . '</td>'
+                . '<td>' . $row['first_name'] . '</td>'
+                . '<td>' . $row['last_name'] . '</td>'
+                . '<td>' . $row['birth_date'] . '</td>'
+                . '<td>' . $row['address'] . '</td>'
+                . '</tr>';
+        }
+        print '</table>';
+    }
 }
 ?>

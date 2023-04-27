@@ -125,6 +125,53 @@
             return true;
         }
 
+        public function select(string $table, string | array $col, string | array $where = null) : mysqli_result | bool {
+            if (!isset($this -> connection))
+                return false;
+
+            $multi_col = false;
+            $multi_where = false;
+
+            if (is_array($col)) {
+                if (count($col) == 0)
+                    return false;
+                elseif (count($col) == 1)
+                    $col = $col[0];
+                else
+                    $multi_col = true;
+            }
+
+            $has_where = isset($where);
+            if ($has_where && is_array($where)) {
+                if (count($where) == 0)
+                    $has_where = false;
+                elseif(count($where) == 1) {
+                    $where = $where[0];
+                } else
+                    $multi_where = true;
+            }
+
+            $str_col = $multi_col ? $col[0] : $col;
+            $str_where = $has_where ? 'WHERE '($multi_where ? $where[0] : $where) : '';
+
+            for ($i = 1; $multi_col && $i < count($col); $i++) {
+                if ($col[$i] != '')
+                    $str_col .= ", $col[$i]";
+            }
+
+            for ($i = 1; $multi_where && $i < count($where); $i++) {
+                if ($where[$i] != '')
+                    $str_where .= ", $where[$i]";
+            }
+
+            try {
+                return $this->connection->query("SELECT $str_col FROM $table $str_where");
+            } catch (mysqli_sql_exception $exception) {
+                $this->exception = $exception;
+                return false;
+            }
+        }
+
         public function getException() : mysqli_sql_exception {
             $exception = $this->exception;
             $this->exception = null;
