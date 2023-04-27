@@ -1,5 +1,5 @@
 <?php
-    namespace SQLProject\Wrapper;
+    namespace SQLProject\util;
 
     use mysqli;
     use mysqli_result;
