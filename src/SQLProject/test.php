@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <?php
-    include "util/SQLConnection.php";
     include "generic/header_generic.html";
 
     use SQLProject\util\SQLConnection;
@@ -19,12 +18,12 @@
         <input type="submit" />
     </form>
     <?php
-
-    include_once "constants.php";
-    $conn = new SQLConnection(SERVER, USERNAME, PASSWORD);
-    print "Connection Active: " . (($conn -> connect()) ? "Yes" : "No") . "<br>";
-    print "Database Connection: " . (($conn -> selectDatabase(DATABASE, true)) ? "Yes" : "No") . "<br>";
-//    print __DIR__;
+        $test = ['cake','pizza'];
+        $test += ['fruit' => 'apple'];
+//        print $test['fruit'] . '<br>';
+        foreach ($test as $k => $v) {
+            print $k . ' : ' . $v . ' | ' . (is_string($k) ? "$k => " : "") . gettype($v) .  '<br>';
+        }
     ?>
 </body>
 <script>

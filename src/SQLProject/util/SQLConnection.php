@@ -13,6 +13,9 @@
         private string $password;
         private string $database;
         private mysqli $connection;
+        private mysqli_sql_exception | null $exception;
+
+        private bool $connected = false;
 
         public function __construct(string $server, string $username, string $password) {
             $this -> server = $server;
@@ -20,13 +23,15 @@
             $this -> password = $password;
         }
 
-        public function connect() : bool {
+        public function connect() : SQLConnection {
             try {
-                $this -> connection = new mysqli($this -> server, $this -> username, $this -> password);
-                return true;
-            } catch (mysqli_sql_exception) {
-                return false;
+                $this -> connection = new mysqli(SERVER, USERNAME, PASSWORD);
+                $this->connected = true;
+            } catch (mysqli_sql_exception $exception) {
+                $this -> exception = $exception;
             }
+
+            return $this;
         }
 
         public function selectDatabase(string $database, bool $create_if_null = false) : bool {
@@ -66,6 +71,71 @@
                 return false;
 
             return $this -> connection -> query($query);
+        }
+
+        public function insert(string $table, string ...$args) : bool {
+            if (!isset($this -> connection))
+                return false;
+
+            if (count($args) == 0)
+                return false;
+
+            $cols = [];
+            $vars = [];
+
+            foreach ($args as $k=>$v) {
+                if (is_string($k))
+                    $cols[] = $k;
+
+                $vars[] = $v;
+            }
+
+            $cols_size = count($cols);
+            $vars_size = count($vars);
+
+            if ($cols_size > 0 && $cols_size != $vars_size)
+                return false;
+
+            // Preset the arrays
+            $str_vars = $this->wrap_var($vars[0]);
+
+            if ($cols_size > 0)
+                $str_cols = '(' . $cols[0];
+            else
+                $str_cols = '';
+
+            // Convert arrays into strings
+            for ($i = 1; $i < $vars_size; $i++) {
+                if ($cols_size > 0)
+                    $str_cols .= ', ' . $cols[$i];
+
+                $str_vars .= ', ' . $this->wrap_var($vars[$i]);
+            }
+
+            if ($cols_size > 0)
+                $str_cols .= ') ';
+
+            try {
+                $this -> connection -> query("INSERT INTO $table VALUES $str_cols ($str_vars)");
+            } catch (mysqli_sql_exception $exception) {
+                $this -> exception = $exception;
+                return false;
+            }
+
+            return true;
+        }
+
+        public function getException() : mysqli_sql_exception {
+            $exception = $this->exception;
+            $this->exception = null;
+            return $exception;
+        }
+
+        private function wrap_var($var) : string {
+            if (is_numeric($var))
+                return $var;
+            else
+                return "'$var'";
         }
     }
 //    spl_autoload_register(function ($class) {
