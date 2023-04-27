@@ -3,7 +3,10 @@
 <head>
     <?php
     include "util/FormUtil.php";
+    include "util/SQLConnection.php";
     include "generic/header_generic.html";
+
+    use SQLProject\util\SQLConnection;
     ?>
     <title>Add Patient</title>
 </head>
@@ -19,13 +22,28 @@
             <input type="submit" value="Add">
         </form>
     </p>
-    <p> <b>
-        <?php
-            print getData('first_name') . '<br>';
-            print getData('last_name') . '<br>';
-            print getData('birth_date') . '<br>';
-            print getData('address') . '<br>';
-        ?> </b>
-    </p>
+    <?php
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        print "<p>";
+        print "Adding Patient: <b>" . getData("first_name") . " " . getData("last_name") . "</b><br>";
+
+        $conn = new SQLConnection(SERVER, USERNAME, PASSWORD);
+        $conn -> connect();
+        $result = $conn -> selectDatabase(DATABASE, true);
+
+        print "Connected:: " . ($result ? "Yes" : "No") . "<br>";
+
+        $result = $conn -> query("INSERT INTO Customers VALUES (DEFAULT, '" .
+                getData('first_name') . "', '" .
+                getData('last_name') . "', '" .
+                getData('birth_date') . "', '" .
+                getData('address') . "')"
+        );
+
+        print ":: " . ($result ? "Added" : "Error");
+
+        print "</p>";
+    }
+    ?>
 </body>
 </html>
