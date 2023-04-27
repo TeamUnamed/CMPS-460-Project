@@ -32,14 +32,14 @@
         $result = $conn->insert('Drugs', getData('drug_id'), getData('drug_name'));
 
         print "Added:: " . ($result ? "Yes" : "No") . '<br>';
-        if (!$result) {
-            $exception = $conn->getException();
-            print '<b>Error:</b> ' . $exception->getCode() . '<br>';
-            print '<b>Message:</b> "' . $exception->getMessage() . '"<br>';
-            print '<b>At Line: </b>' . $exception->getLine() . ' <b> in: </b>' . $exception->getFile() . '<br>';
-            print $exception->getTraceAsString() . '<br>';
-            print $exception->getLine();
-        }
+//        if (!$result) {
+//            $exception = $conn->getException();
+//            print '<b>Error:</b> ' . $exception->getCode() . '<br>';
+//            print '<b>Message:</b> "' . $exception->getMessage() . '"<br>';
+//            print '<b>At Line: </b>' . $exception->getLine() . ' <b> in: </b>' . $exception->getFile() . '<br>';
+//            print $exception->getTraceAsString() . '<br>';
+//            print $exception->getLine();
+//        }
         print "</p>";
     }
     ?>

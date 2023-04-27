@@ -38,11 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!$result || $result -> num_rows == 0) {
         print "Added:: No -> No Matching Drug ID";
     } else {
-        $result = $conn->query("INSERT INTO Drug_Types VALUES (" .
-            getData('type_id') . ", " .
-            getData('drug_id') . ", '" .
-            getData('type_desc') . "')"
-        );
+        $result = $conn->insert('Drug_Types', getData('type_id'), getData('drug_id'), getData('type_desc'));
 
         print "Added:: " . ($result ? "Yes" : "No");
         print "</p>";

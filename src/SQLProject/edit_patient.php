@@ -33,12 +33,8 @@
 
         print "Connected:: " . ($result ? "Yes" : "No") . "<br>";
 
-        $result = $conn -> query("INSERT INTO Customers VALUES (DEFAULT, '" .
-                getData('first_name') . "', '" .
-                getData('last_name') . "', '" .
-                getData('birth_date') . "', '" .
-                getData('address') . "')"
-        );
+        $result = $conn->insert('Customers', 'DEFAULT', getData('first_name'), getData('last_name'),
+            getData('birth_date'), getData('address'));
 
         print ":: " . ($result ? "Added" : "Error");
 
