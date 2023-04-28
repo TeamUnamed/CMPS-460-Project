@@ -33,6 +33,23 @@
 </html>
 
 <script>
+    function deleteRow(id) {
+        console.log("Deleting row " + id)
+        $.post('data/prescription.php', "func=delete&id=" + id, function (response) {
+            if (response == null) {
+                console.log("Error: No Response");
+                return;
+            }
+
+            console.log(response);
+
+            if (response['success']) {
+                $('#row_' + id).remove();
+            }
+
+        });
+    }
+
     $('#search_form').on('submit', function (e) {
         e.preventDefault();
 
@@ -66,7 +83,7 @@
                 data.forEach(entry => {
                     console.log(entry);
                     let id = entry['pId'];
-                    html += "<tr>";
+                    html += "<tr id='row_" + id + "'>";
                     html += "<td id='id_"+ id + "'>" + id + "</td>\n";
                     html += "<td>" + entry['cId'] + "</td>\n";
                     html += "<td>" + entry['dId'] + "</td>\n";
@@ -74,6 +91,7 @@
                     html += "<td>" + entry['count'] + "</td>\n";
                     html += "<td>" + entry['refills'] + "</td>\n";
                     html += "<td>" + entry['fill_date'] + "</td>\n";
+                    html += "<td id='del_btn_" + id + "'><button type='button' onclick='deleteRow(" + id + ")'>Delete</button></td>"
                     html += "</tr>";
                 })
                 table.html(html);

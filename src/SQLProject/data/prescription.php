@@ -129,6 +129,28 @@
 
     DELETE:
 
+
+
+    $id = $_POST['id'];
+
+    if (!isset($id)) {
+        $payload['code'] = 200_402;
+        $payload['error'] = "Missing Argument [id : int]>";
+        goto RETURN_PAYLOAD;
+    }
+
+    $result = $connection->query("DELETE FROM Prescriptions WHERE id=$id");
+
+    if (!$result) {
+        $error = $connection->getException();
+        $payload['code'] = $error->getCode();
+        $payload['error'] = $error->getMessage();
+        goto RETURN_PAYLOAD;
+    }
+
+    $payload['success'] = true;
+    $payload['id'] = $id;
+
     RETURN_PAYLOAD:
 
     echo json_encode($payload);
