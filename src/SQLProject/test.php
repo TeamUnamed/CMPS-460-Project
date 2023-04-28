@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <?php
-        include "generic/header_generic.html";
+        include "base/navbar.html";
 
         use SQLProject\util\SQLConnection;
 

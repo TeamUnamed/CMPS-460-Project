@@ -4,7 +4,7 @@
     <?php
         include "util/FormUtil.php";
         include "util/SQLConnection.php";
-        include "generic/header_generic.html";
+        include "base/navbar.html";
 
         use SQLProject\util\SQLConnection;
 

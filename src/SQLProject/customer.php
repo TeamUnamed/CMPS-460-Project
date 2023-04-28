@@ -35,30 +35,40 @@
         goto RETURN_PAYLOAD;
     }
 
-    if ($func == "search")
+    if ($func == "search") {
         goto SEARCH;
-    elseif ($func == "update")
+    } elseif ($func == "update") {
         goto UPDATE;
-    else {
+    } else {
         $payload['code'] = 200_401;
         goto RETURN_PAYLOAD;
     }
 
-SEARCH:
+    SEARCH:
 
-    $id         = $_POST['id']         ?? '';
+    $id = $_POST['id'] ?? '';
     $first_name = $_POST['first_name'] ?? '';
-    $last_name  = $_POST['last_name']  ?? '';
+    $last_name = $_POST['last_name'] ?? '';
     $birth_date = $_POST['birth_date'] ?? '';
-    $address    = $_POST['address']    ?? '';
+    $address = $_POST['address'] ?? '';
 
     $params = [];
 
-    if ($id != '')         $params[] = "id=$id";
-    if ($first_name != '') $params[] = "first_name='$first_name'";
-    if ($last_name != '')  $params[] = "last_name='$last_name'";
-    if ($birth_date != '') $params[] = "birth_date='$birth_date'";
-    if ($address != '')    $params[] = "address='$address'";
+    if ($id != '') {
+        $params[] = "id=$id";
+    }
+    if ($first_name != '') {
+        $params[] = "first_name='$first_name'";
+    }
+    if ($last_name != '') {
+        $params[] = "last_name='$last_name'";
+    }
+    if ($birth_date != '') {
+        $params[] = "birth_date='$birth_date'";
+    }
+    if ($address != '') {
+        $params[] = "address='$address'";
+    }
 
     $result = $connection->select("Customers", "*", $params);
 
@@ -73,11 +83,11 @@ SEARCH:
         while ($row = $result->fetch_assoc()) {
             $entry = [];
 
-            $entry['id']         = $row['id'];
+            $entry['id'] = $row['id'];
             $entry['first_name'] = $row['first_name'];
-            $entry['last_name']  = $row['last_name'];
+            $entry['last_name'] = $row['last_name'];
             $entry['birth_date'] = $row['birth_date'];
-            $entry['address']    = $row['address'];
+            $entry['address'] = $row['address'];
 
             $payload['data'][] = $entry;
         }
@@ -85,7 +95,7 @@ SEARCH:
 
     goto RETURN_PAYLOAD;
 
-UPDATE:
+    UPDATE:
 
     $id = $_POST['id'];
     $address = $_POST['address'] ?? '';
@@ -109,7 +119,7 @@ UPDATE:
     $payload['data']['id'] = $id;
     $payload['data']['address'] = $address;
 
-RETURN_PAYLOAD:
+    RETURN_PAYLOAD:
 
     echo json_encode($payload);
 

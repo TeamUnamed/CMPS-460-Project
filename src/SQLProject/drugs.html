@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Drug</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="base/navbarInclude.js"></script>
+
+    <div class="navbar"></div>
+</head>
+<body>
+    <form id="search">
+        <label>ID: <input type="number" name="id" min="0" placeholder="0"></label><br>
+        <label>Name: <input type="text" name="name" placeholder="Another Drug Name"></label><br>
+        <input type="hidden" name="func" value="search"> <br>
+        <button type="submit">Search</button>
+    </form>
+
+    <form id="edit_form">
+        <input type="hidden" name="func" value="update">
+    </form>
+
+    <table id="result_table">
+    </table>
+</body>
+</html>
+
+<script>
+    $('#search').on('submit', function (e) {
+        e.preventDefault();
+        const form = $(e.target);
+        console.log(form.serializeArray());
+
+        $.post('drug.php', form.serialize(), function (response) {
+            if (response == null) {
+                console.log("Error: No Response");
+                return;
+            }
+
+            if (response['data'] == null) {
+                console.log("Error: No Data");
+                return;
+            }
+
+            let data = response['data'];
+
+            let table = $("#result_table");
+            let html = "<tr><th>ID</th><th>Name</th>\n";
+            data.forEach(entry => {
+                console.log(entry);
+                let id = entry['id'];
+                html += "<tr>";
+                html += "<td id='id_"+ id + "'>" + id + "</td>\n";
+                html += "<td>" + entry['name'] + "</td>\n";
+                html += "</tr>";
+            })
+            table.html(html);
+        });
+
+        return false;
+    });
+</script>

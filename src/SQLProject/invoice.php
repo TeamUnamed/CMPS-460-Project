@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <?php include "generic/header_generic.html" ?>
+    <?php include "base/navbar.html" ?>
 
     <title>Submit Invoice</title>
 </head>
