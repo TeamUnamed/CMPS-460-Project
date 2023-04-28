@@ -3,7 +3,7 @@
 
     function redirect(string $url, bool $local = false): void
     {
-        $root = $local ? "" : "../";
+        $root = $local ? "" : "/SQLProject/";
         header("location: $root$url");
     }
 

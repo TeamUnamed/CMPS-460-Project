@@ -2,23 +2,23 @@
     <span id="user_ctrl">
         . . .
     </span>| |
-    <a href="http://localhost/SQLProject/index.html">Index</a> |
-    <a href="http://localhost/SQLProject/customers.html">Edit Customers</a> |
-    <a href="http://localhost/SQLProject/drugs.html">Edit Drugs</a> |
-    <a href="http://localhost/SQLProject/drug_types.html">Edit Drug Types</a> |
-    <a href="http://localhost/SQLProject/prescriptions.html">Edit Prescriptions</a> | |
+    <a href="/SQLProject/index.html">Index</a> |
+    <a href="/SQLProject/customers.html">Edit Customers</a> |
+    <a href="/SQLProject/drugs.html">Edit Drugs</a> |
+    <a href="/SQLProject/drug_types.html">Edit Drug Types</a> |
+    <a href="/SQLProject/prescriptions.html">Edit Prescriptions</a> | |
 </div>
 <br>
 
 <script>
     if (session['userid'] == null) {
         $("#user_ctrl").html(
-            "<a href='http://localhost/SQLProject/user/login.php'>Login</a> |\n" +
-            "<a href='http://localhost/SQLProject/user/register.php'>Register</a>\n"
+            "<a href='/SQLProject/user/login.php'>Login</a> |\n" +
+            "<a href='/SQLProject/user/register.php'>Register</a>\n"
         )
     } else {
         $("#user_ctrl").html(
-            "<a href='http://localhost/SQLProject/user/logout.php'>Logout</a> |\n"
+            "<a href='/SQLProject/user/logout.php'>Logout</a> |\n"
         )
     }
 </script>

@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <script src="session_hook.php"></script>
-        <script src="../navbarInclude.js"></script>
+        <script src="/SQLProject/navbarInclude.js"></script>
 
         <div class="navbar"></div>
     </head>

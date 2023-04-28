@@ -9,6 +9,6 @@ session['email']  = "<?php echo $_SESSION['email'] ?? "null" ?>";
 
 function requireSession() {
     if (!<?php echo isset($_SESSION["userid"]) && $_SESSION["userid"] !== false ? "true" : "false"?>) {
-        window.location.replace("http://localhost/SQLProject/user/login.php")
+        window.location.replace("/SQLProject/user/login.php")
     }
 }
