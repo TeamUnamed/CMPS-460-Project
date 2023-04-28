@@ -5,6 +5,7 @@
     {
         $root = $local ? "" : "/SQLProject/";
         header("location: $root$url");
+        exit();
     }
 
     if (isset($_SESSION["userid"]) && $_SESSION["userid"] !== false) {

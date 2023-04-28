@@ -42,11 +42,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                 } else {
                     $error .= '<p class="error">Something went wrong!</p>';
                 }
+                $insertQuery->close();
             }
         }
     }
     $query->close();
-    $insertQuery->close();
+
+    if(isset($result) && $result === true){
+        redirect("index.html");
+    }
 
     mysqli_close($db);
 }
@@ -63,6 +67,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         <div class="navbar"></div>
     </head>
     <body>
+        <?php
+            if (!empty($error))
+                print $error;
+        ?>
         <div class="container">
             <div class="row">
                 <div class="col-mid-12">
