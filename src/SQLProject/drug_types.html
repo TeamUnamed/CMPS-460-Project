@@ -16,7 +16,8 @@
 
     <form id="data_form">
         <label>ID: <input min="0" name="id" placeholder="0" type="number"></label><br>
-        <label>Name: <input name="name" placeholder="Another Drug Name" type="text"></label><br>
+        <label>Drug ID: <input min="0" name="drugId" placeholder="0" type="number"></label><br>
+        <label>Description: <input name="description" placeholder="Description" type="text"></label><br>
     </form>
     <button form="search_form" type="submit">Search</button>
     <button form="add_form" type="submit">Add</button>
@@ -35,7 +36,7 @@
 
         console.log(args);
 
-        $.post('data/drug.php', args, function (response) {
+        $.post('data/drug_type.php', args, function (response) {
             if (response == null) {
                 console.log("Error: No Response");
                 return;
@@ -49,13 +50,14 @@
             let data = response['data'];
 
             let table = $("#result_table");
-            let html = "<tr><th>ID</th><th>Name</th>\n";
+            let html = "<tr><th>ID</th><th>Drug ID</th><th>Description</th>\n";
             data.forEach(entry => {
                 console.log(entry);
                 let id = entry['id'];
                 html += "<tr>";
                 html += "<td id='id_" + id + "'>" + id + "</td>\n";
-                html += "<td>" + entry['name'] + "</td>\n";
+                html += "<td>" + entry['drugId'] + "</td>\n";
+                html += "<td>" + entry['description'] + "</td>\n";
                 html += "</tr>";
             })
             table.html(html);
@@ -72,7 +74,7 @@
 
         console.log(args);
 
-        $.post('data/drug.php', args, function (response) {
+        $.post('data/drug_type.php', args, function (response) {
             if (response == null) {
                 console.log("Error: No Response");
                 return;

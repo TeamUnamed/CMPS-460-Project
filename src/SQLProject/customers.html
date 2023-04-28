@@ -80,7 +80,7 @@
 
             console.log(form.serializeArray());
 
-            $.post('customer.php', form.serialize(), function (response) {
+            $.post('data/customer.php', form.serialize(), function (response) {
                 console.log(response);
                 if (response['data'] == null) {
                     console.log("Error: No Data");
@@ -113,7 +113,7 @@
             const form = $(e.target);
             console.log(form.serialize());
 
-            $.post('customer.php', form.serialize(), function (response) {
+            $.post('data/customer.php', form.serialize(), function (response) {
                 if (response == null) {
                     console.log("Error: No Response");
                     return;

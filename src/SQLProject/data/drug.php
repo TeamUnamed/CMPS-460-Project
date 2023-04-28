@@ -73,6 +73,9 @@
     $id = $_POST['id'];
     $name = $_POST['name'];
 
+    if ($id == '') $id = null;
+    if ($name == '') $name = null;
+
     if (!isset($id) || !isset($name)) {
         $payload['code'] = 200_402;
         $payload['error'] = "Missing Argument";
