@@ -13,5 +13,106 @@
     <p>
         Use the links above to navigate!
     </p>
+    <p>
+    <div id="populate"></div>
+    </p>
 </body>
 </html>
+
+<script>
+    let first_names = [
+        "Michael", "Christopher", "Jessica", "Matthew", "Ashley",
+        "Jennifer", "Joshua", "Amanda", "Daniel", "David",
+        "James", "Robert", "John", "Joseph", "Andrew",
+        "Ryan", "Brandon", "Jason", "Justin", "Sarah",
+        "William", "Jonathan", "Stephanie", "Brian", "Nicole",
+        "Nicholas", "Anthony", "Heather", "Eric", "Elizabeth"
+    ]
+
+    let last_names = [
+        "Chung", "Chen", "Melton", "Hill", "Puckett",
+        "Song", "Hamilton", "Bender", "Wagner", "McLaughlin",
+        "McNamara", "Raynor", "Moon", "Woodard", "Desai",
+        "Wallace", "Lawrence", "Griffin", "Dougherty", "Powers",
+        "May", "Steele", "Teague", "Vick", "Gallagher",
+        "Solomon", "Walsh", "Monroe", "Connolly", "Hawkins"
+    ]
+
+    let dpm = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+    let streets = [
+        "10th St", "11th St", "12th St", "13th St", "14th St",
+        "15th St", "16th St", "17th St", "1st Ave", "1st Colony",
+        "1st Park 10 Blvd", "1st View Dr", "2 Rivers Dr", "2 Rock Oak", "2 Wells Dr",
+        "2 Wood Way", "22nd St", "23rd St", "24th St", "25th St",
+        "26th St", "2nd Ave", "2nd St", "3 Forks", "3 Springs Dr",
+        "3rd St", "3rd St", "4 Colonies", "4 Iron Ct", "4th Alley"
+    ]
+
+    let drug_names = [
+        "Acetaminophen", "Adderall", "Amitriptyline", "Amlodipine", "Amoxicillin",
+        "Ativan", "Atorvastatin", "Azithromycin", "Benzonatate", "Brilinta",
+        "Bunavail", "Buprenorphine", "Cephalexin", "Ciprofloxacin", "Citalopram",
+        "Clindamycin", "Clonazepam", "Cyclobenzaprine", "Cymbalta", "Doxycycline",
+        "Dupixent", "Entresto", "Entyvio", "Farxiga", "Fentanyl",
+        "Gabapentin", "Gilenya", "Humira", "Hydrochlorothiazide", "Hydroxychloroquine"
+    ]
+
+    let drug_types = [
+        "pill", "capsule", "patch", "injection", "tablet", "suppository", "iv", "liquid", "gummy", "magic"
+    ]
+
+    function random(bound) {
+        return Math.floor(Math.random() * bound) + 1
+    }
+
+    function populateData() {
+        console.log("Populating Data");
+
+        let ids = [];
+
+        for (let i = 0; i < 5; i++) {
+            let args = "func=add";
+            args +="&first_name=" + first_names[random(30)-1];
+            args += "&last_name=" + last_names[random(30)-1];
+            let year = random(12) + 1900;
+            let month = random(12);
+            let day = random(month-1) + 1
+            args += "&birth_date=" + year + "-" + day + "-" + month;
+            args += "&address=" + streets[random(30)-1];
+
+            console.log(args);
+            $.post('data/customer.php', args, function(response){
+            });
+
+            args = "func=add";
+            let id = random(50000);
+            ids.push(id);
+            args += "&id=" + id;
+            args += "&name=" + drug_names[random(30)-1];
+
+            console.log(args);
+            $.post('data/drug.php', args, function (response){
+            })
+        }
+
+        let type_ids = [];
+
+        for (let i = 0; i < 5; i++) {
+            let args = "func=add"
+            let id = random(50000);
+            args += "&id=" + id;
+            type_ids.push(id);
+            args += "&drugId=" + ids[random(5)-1];
+            args += "&description=" + drug_types[random(10)-1];
+            console.log(args);
+            $.post('data/drug_type.php', args, function (response){
+                console.log(response)
+            })
+        }
+    }
+
+    if (session['userid'] != null) {
+        $('#populate').html("<button type='button' onclick='populateData()'>Populate Test Data</button>")
+    }
+</script>
