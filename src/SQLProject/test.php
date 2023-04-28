@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <?php
-    include "generic/header_generic.html";
+        include "generic/header_generic.html";
 
-    use SQLProject\util\SQLConnection;
+        use SQLProject\util\SQLConnection;
+
     ?>
     <title>Test</title>
 
@@ -15,15 +16,11 @@
         <label>A<input type="text" name="a"/></label><br>
         <label>B<input type="text" name="b"/></label><br>
         <label>C<input type="text" name="c"/></label><br>
-        <input type="submit" />
+        <input type="submit"/>
     </form>
     <?php
-        $a = 'hello';
-        print '?' . is_string($a) . '<br>';
-        print '?' . is_array($a) . '<br>';
-        $a = ['hello'];
-        print '?' . is_string($a) . '<br>';
-        print '?' . is_array($a) . '<br>';
+
+
     ?>
 </body>
 <script>

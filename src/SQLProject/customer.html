@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Lookup Patient</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    </head>
+    <body>
+        <br>
+        <form id='lookup'>
+            <label>Id: <input type='number' name='id'/></label> <br>
+            <label>First Name: <input type='text' name='first_name' placeholder='Jane'/></label> <br>
+            <label>Last Name: <input type='text' name='last_name' placeholder='Doe'/></label> <br>
+            <label>Birth Date: <input type='date' name='birth_date'/></label> <br>
+            <label>Address: <input type='text' name='address' placeholder='101 Cherry Lane'/></label> <br>
+            <input type="hidden" name="func" value="search">
+            <button type="submit">Search</button>
+        </form>
+        <br>
+        <table id="result_table">
+        </table>
+        <form id="edit_form">
+            <input type="hidden" name="func" value="update">
+        </form>
+    </body>
+    <script>
+        let last_edit_id = -1;
+        let last_address = '';
+
+        function editRow(id) {
+            // Reset previous edit if not saved.
+            cancelEdit();
+            let edit_id = document.getElementById("id_" + id);
+            let edit_addr = document.getElementById("addr_" + id);
+            let edit_btn = document.getElementById("edit_btn_" + id);
+
+            // Change ID
+            last_edit_id = id;
+            // Save Old Value (in case of cancel)
+            last_address = edit_addr.innerHTML;
+            edit_id.innerHTML = "<input type='number' name='id' form='edit_form' value=" + id + " style='width:60px' readonly/>"
+            edit_addr.innerHTML = '<input type="text" name="address" form="edit_form" value="' + edit_addr.innerHTML + '"/>'
+            edit_btn.innerHTML = '<button type="button" onclick="cancelEdit()">Cancel</button> ' +
+                '<button type="submit" form="edit_form">Save</button>'
+        }
+
+        function cancelEdit() {
+            if (last_edit_id < 0) {
+                return;
+            }
+            let edit_id = document.getElementById("id_" + last_edit_id);
+            let address = document.getElementById("addr_" + last_edit_id);
+            let button = document.getElementById("edit_btn_" + last_edit_id);
+
+            edit_id.innerHTML = last_edit_id;
+            address.innerHTML = last_address;
+            button.innerHTML = '<button type="button" onclick="editRow(' + last_edit_id + ')">Edit</button>'
+
+            last_edit_id = -1;
+            last_address = '';
+        }
+
+        function arrayToJson(array) {
+            const json = {};
+            $.each(array, function () {
+                if (jQuery.type(this.value) === "array")
+                    json[this.name] = arrayToJson(this.value);
+                else
+                    json[this.name] = this.value || "";
+            });
+            return json;
+        }
+
+        $('#lookup').on('submit', function (e) {
+            e.preventDefault();
+
+            const form = $(e.target);
+
+            console.log(form.serializeArray());
+
+            $.post('customer.php', form.serialize(), function (response) {
+                console.log(response);
+                if (response['data'] == null) {
+                    console.log("Error: No Data");
+                } else {
+                    let data = response['data'];
+
+                    let table = $("#result_table");
+                    let html = "<tr><th style='width:10%;'>Id</th><th>First Name</th><th>Last Name</th><th>Birth Date</th><th>Address</th></tr>\n";
+                    data.forEach(entry => {
+                        console.log(entry);
+                        let id = entry['id'];
+                        html += "<tr>";
+                        html += "<td id='id_"+ id + "'>" + id + "</tdaddr_>\n";
+                        html += "<td>" + entry['first_name'] + "</td>\n";
+                        html += "<td>" + entry['last_name'] + "</td>\n";
+                        html += "<td>" + entry['birth_date'] + "</td>\n";
+                        html += "<td id='addr_" + id + "'>" + entry['address'] + "</td>\n";
+                        html += "<td id='edit_btn_" + id + "'><button type='button' onclick='editRow(" + id + ")'>Edit</button></td>"
+                        html += "</tr>";
+                    })
+                    table.html(html);
+                }
+            });
+
+            return false;
+        })
+
+        $('#edit_form').on('submit', function (e) {
+            e.preventDefault();
+            const form = $(e.target);
+            console.log(form.serialize());
+
+            $.post('customer.php', form.serialize(), function (response) {
+                if (response == null) {
+                    console.log("Error: No Response");
+                    return;
+                }
+
+                if (response['data'] == null) {
+                    console.log("Error: No Data");
+                    return;
+                }
+
+                let success = response['success'];
+                let data = response['data'];
+                console.log("Update Successful: " + success);
+
+                if (success) {
+                    console.log(response['data']);
+                    cancelEdit();
+                    $('#addr_' + data['id']).html(data['address']);
+                }
+            }, "json");
+            return false;
+        });
+    </script>
+</html>
