@@ -19,9 +19,10 @@
         <label>Drug ID: <input min="0" name="drugId" placeholder="0" type="number"></label><br>
         <label>Description: <input name="description" placeholder="Description" type="text"></label><br>
     </form>
+    <br>
     <button form="search_form" type="submit">Search</button>
     <button form="add_form" type="submit">Add</button>
-
+    <br>
     <table id="result_table">
     </table>
 </body>
@@ -94,7 +95,7 @@
             $(':input','#data_form').val('');
 
             $("#result_table").append(
-                "<td>" + data['id'] + "</td>,<td>" + data['name'] + "</td>"
+                "<tr><td>" + data['id'] + "</td>,<td>" + data['name'] + "</td></tr>"
             );
         });
 
