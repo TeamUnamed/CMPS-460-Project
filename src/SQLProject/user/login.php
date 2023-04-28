@@ -22,11 +22,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         if($query = $db->prepare("SELECT * FROM Users WHERE email = ?")) {
             $query->bind_param('s', $email);
             $query->execute();
+            $query->bind_result($userId, $name, $hash, $email);
             $row = $query->fetch();
             if($row) {
-                if (password_verify($password, $row['passwprd'])) {
-                    $_SESSION["userid"] = $row['id'];
-                    $_SESSION["user"] = $row;
+                if (password_verify($password, $hash)) {
+                    $_SESSION["userid"] = $userId;
+                    $_SESSION["name"] = $name;
 
                     header("location: welcome.php");
                     exit;
@@ -43,13 +44,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en";
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>Login</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/boostrap.min.css">
     </head>
     <body>
+        <?php
+            if (!empty($error))
+                print $error;
+        ?>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
