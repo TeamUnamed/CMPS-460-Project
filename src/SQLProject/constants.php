@@ -48,3 +48,12 @@
         FOREIGN KEY (drugId)     REFERENCES Drug_Types(id),
         FOREIGN KEY (employeeId) REFERENCES Employees(id)
         ";
+
+    const USERS_SCHEMA = "
+        id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+        name       VARCHAR(75)  NOT NULL,
+        password   VARCHAR(255) NOT NULL,
+        email      VARCHAR(100) NOT NULL,
+        PRIMARY KEY (id),
+        UNIQUE KEY  (email)
+    ";

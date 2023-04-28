@@ -71,6 +71,7 @@
                 $this->connection->query ("CREATE TABLE IF NOT EXISTS Drugs (" . DRUGS_SCHEMA . ")");
                 $this->connection->query ("CREATE TABLE IF NOT EXISTS Drug_Types (" . DRUG_TYPES_SCHEMA . ")");
                 $this->connection->query ("CREATE TABLE IF NOT EXISTS Prescriptions (" . PRESCRIPTIONS_SCHEMA . ")");
+                $this->connection->query("CREATE TABLE IF NOT EXISTS Users (" . USERS_SCHEMA . ")");
             }
 
             return true;
