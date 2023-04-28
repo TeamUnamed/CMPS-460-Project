@@ -8,22 +8,22 @@
         <div class="navbar"></div>
     </head>
     <body>
-        <br>
-        <form id='lookup'>
-            <label>Id: <input type='number' name='id'/></label> <br>
+        <form id="search_form"><input name="func" type="hidden" value="search"></form>
+        <form id="add_form"><input name="func" type="hidden" value="add"></form>
+        <form id="edit_form"><input name="func" type="hidden" value="update"></form>
+
+        <form id='data_form'>
+            <label>Id: <input type='number' name='id' placeholder="0"/></label> <br>
             <label>First Name: <input type='text' name='first_name' placeholder='Jane'/></label> <br>
             <label>Last Name: <input type='text' name='last_name' placeholder='Doe'/></label> <br>
             <label>Birth Date: <input type='date' name='birth_date'/></label> <br>
             <label>Address: <input type='text' name='address' placeholder='101 Cherry Lane'/></label> <br>
-            <input type="hidden" name="func" value="search">
-            <button type="submit">Search</button>
         </form>
         <br>
-        <table id="result_table">
-        </table>
-        <form id="edit_form">
-            <input type="hidden" name="func" value="update">
-        </form>
+        <button form="search_form" type="submit">Search</button>
+        <button form="add_form" type="submit">Add</button>
+        <br>
+        <table id="result_table"></table>
     </body>
     <script>
         let last_edit_id = -1;
@@ -62,25 +62,16 @@
             last_address = '';
         }
 
-        function arrayToJson(array) {
-            const json = {};
-            $.each(array, function () {
-                if (jQuery.type(this.value) === "array")
-                    json[this.name] = arrayToJson(this.value);
-                else
-                    json[this.name] = this.value || "";
-            });
-            return json;
-        }
-
-        $('#lookup').on('submit', function (e) {
+        $('#search_form').on('submit', function (e) {
             e.preventDefault();
 
             const form = $(e.target);
+            const data_form = $('#data_form');
+            const args = form.serialize() + "&" + data_form.serialize();
 
-            console.log(form.serializeArray());
+            console.log(args);
 
-            $.post('data/customer.php', form.serialize(), function (response) {
+            $.post('data/customer.php', args, function (response) {
                 console.log(response);
                 if (response['data'] == null) {
                     console.log("Error: No Data");
@@ -108,12 +99,56 @@
             return false;
         })
 
+        $('#add_form').on('submit', function (e) {
+            e.preventDefault();
+            const form = $(e.target);
+            const data_form = $('#data_form');
+            const args = form.serialize() + "&" + data_form.serialize();
+
+            console.log(args);
+
+            $.post('data/customer.php', args, function (response) {
+                if (response == null) {
+                    console.log("Error: No Response");
+                    return;
+                }
+
+                console.log(response);
+
+                if (response['data'] == null) {
+                    console.log("Error: No Data");
+                    return;
+
+                }
+                if (!response['success']) return;
+
+                let data = response['data'];
+
+                $(':input','#data_form').val('');
+
+                let html = "<tr>" +
+                    "<td>" + data['id'] + "</td>" +
+                    "<td>" + data['first_name'] + "</td>" +
+                    "<td>" + data['last_name'] + "</td>" +
+                    "<td>" + data['birth_date'] + "</td>" +
+                    "<td>" + data['address'] + "</td>" +
+                    "</tr>";
+
+                $("#result_table").append(html);
+            });
+
+            return false
+        });
+
         $('#edit_form').on('submit', function (e) {
             e.preventDefault();
             const form = $(e.target);
-            console.log(form.serialize());
+            const data_form = $('#data_form');
+            const args = form.serialize() + "&" + data_form.serialize();
 
-            $.post('data/customer.php', form.serialize(), function (response) {
+            console.log(args);
+
+            $.post('data/customer.php', args, function (response) {
                 if (response == null) {
                     console.log("Error: No Response");
                     return;

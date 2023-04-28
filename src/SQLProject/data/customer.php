@@ -37,6 +37,8 @@
 
     if ($func == "search") {
         goto SEARCH;
+    } elseif ($func == "add") {
+        goto ADD;
     } elseif ($func == "update") {
         goto UPDATE;
     } else {
@@ -92,6 +94,44 @@
             $payload['data'][] = $entry;
         }
     }
+
+    goto RETURN_PAYLOAD;
+
+    ADD:
+
+    $id = $_POST['id'] ?? '';
+    $first_name = $_POST['first_name'] ?? '';
+    $last_name = $_POST['last_name'] ?? '';
+    $birth_date = $_POST['birth_date'] ?? '';
+    $address = $_POST['address'] ?? '';
+
+    if ($id == '') $id = "DEFAULT";
+    if ($first_name == '') $first_name = null;
+    if ($last_name == '') $last_name   = null;
+    if ($birth_date == '') $birth_date = null;
+    if ($address == '') $address       = null;
+
+    if (!isset($id) || !isset($first_name) || !isset($last_name) || !isset($birth_date) || !isset($address)) {
+        $payload['code'] = 200_402;
+        $payload['error'] = "Missing Argument";
+        goto RETURN_PAYLOAD;
+    }
+
+    $result = $connection->insert('Customers', $id, $first_name, $last_name, $birth_date, $address);
+
+    if (!$result) {
+        $error = $connection->getException();
+        $payload['code'] = $error->getCode();
+        $payload['error'] = $error->getMessage();
+        goto RETURN_PAYLOAD;
+    }
+
+    $payload['success'] = true;
+    $payload['data']['id'] = $id;
+    $payload['data']['first_name'] = $first_name;
+    $payload['data']['last_name'] = $last_name;
+    $payload['data']['birth_date'] = $birth_date;
+    $payload['data']['address'] = $address;
 
     goto RETURN_PAYLOAD;
 
