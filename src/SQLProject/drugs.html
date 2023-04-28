@@ -10,16 +10,16 @@
     <div class="navbar"></div>
 </head>
 <body>
-    <form id="search">
-        <label>ID: <input type="number" name="id" min="0" placeholder="0"></label><br>
-        <label>Name: <input type="text" name="name" placeholder="Another Drug Name"></label><br>
-        <input type="hidden" name="func" value="search"> <br>
-        <button type="submit">Search</button>
-    </form>
+    <form id="search_form"><input name="func" type="hidden" value="search"></form>
+    <form id="add_form"><input name="func" type="hidden" value="add"></form>
+    <form id="edit_form"><input name="func" type="hidden" value="update"></form>
 
-    <form id="edit_form">
-        <input type="hidden" name="func" value="update">
+    <form id="data_form">
+        <label>ID: <input min="0" name="id" placeholder="0" type="number"></label><br>
+        <label>Name: <input name="name" placeholder="Another Drug Name" type="text"></label><br>
     </form>
+    <button form="search_form" type="submit">Search</button>
+    <button form="add_form" type="submit">Add</button>
 
     <table id="result_table">
     </table>
@@ -27,12 +27,15 @@
 </html>
 
 <script>
-    $('#search').on('submit', function (e) {
+    $('#search_form').on('submit', function (e) {
         e.preventDefault();
         const form = $(e.target);
-        console.log(form.serializeArray());
+        const data_form = $('#data_form');
+        const args = form.serialize() + "&" + data_form.serialize();
 
-        $.post('drug.php', form.serialize(), function (response) {
+        console.log(args);
+
+        $.post('drug.php', args, function (response) {
             if (response == null) {
                 console.log("Error: No Response");
                 return;
@@ -51,7 +54,7 @@
                 console.log(entry);
                 let id = entry['id'];
                 html += "<tr>";
-                html += "<td id='id_"+ id + "'>" + id + "</td>\n";
+                html += "<td id='id_" + id + "'>" + id + "</td>\n";
                 html += "<td>" + entry['name'] + "</td>\n";
                 html += "</tr>";
             })
@@ -59,5 +62,40 @@
         });
 
         return false;
+    });
+
+    $('#add_form').on('submit', function (e) {
+        e.preventDefault();
+        const form = $(e.target);
+        const data_form = $('#data_form');
+        const args = form.serialize() + "&" + data_form.serialize();
+
+        console.log(args);
+
+        $.post('drug.php', args, function (response) {
+            if (response == null) {
+                console.log("Error: No Response");
+                return;
+            }
+
+            console.log(response);
+
+            if (response['data'] == null) {
+                console.log("Error: No Data");
+                return;
+
+            }
+            if (!response['success']) return;
+
+            let data = response['data'];
+
+            $(':input','#data_form').val('');
+
+            $("#result_table").append(
+                "<td>" + data['id'] + "</td>,<td>" + data['name'] + "</td>"
+            );
+        });
+
+        return false
     });
 </script>

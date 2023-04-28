@@ -30,12 +30,10 @@
     }
 
     if ($func == "search") goto SEARCH;
-    elseif ($func == "update") {
-
-    } elseif ($func == "delete") {
-
-    } else {
+    elseif ($func == "add") goto ADD;
+    else {
         $payload['code'] = 200_401;
+        $payload['error'] = "Invalid Function";
         goto RETURN_PAYLOAD;
     }
 
@@ -67,6 +65,31 @@
             $payload['data'][] = $entry;
         }
     }
+
+    goto RETURN_PAYLOAD;
+
+    ADD:
+
+    $id = $_POST['id'];
+    $name = $_POST['name'];
+
+    if (!isset($id) || !isset($name)) {
+        $payload['code'] = 200_402;
+        $payload['error'] = "Missing Argument";
+        goto RETURN_PAYLOAD;
+    }
+
+    $result = $connection->insert('Drugs', $id, $name);
+    if (!$result) {
+        $error = $connection->getException();
+        $payload['code'] = $error->getCode();
+        $payload['error'] = $error->getMessage();
+        goto RETURN_PAYLOAD;
+    }
+
+    $payload['success'] = true;
+    $payload['data']['id'] = $id;
+    $payload['data']['name'] = $name;
 
     RETURN_PAYLOAD:
 
