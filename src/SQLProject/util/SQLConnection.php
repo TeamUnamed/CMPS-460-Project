@@ -11,7 +11,7 @@
     class SQLConnection
     {
         public string|null $sql;
-        private mysqli $connection;
+        public mysqli $connection;
         private mysqli_sql_exception|null $exception;
         private bool $connected = false;
 

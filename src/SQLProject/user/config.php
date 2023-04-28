@@ -1,11 +1,13 @@
 <?php
-    const DBSERVER = 'localhost';
-    const DBUSERNAME = 'root';
-    const DBPASSWORD = '';
-    const DBNAME = 'pharmacy';
 
-    $db = mysqli_connect(DBSERVER, DBUSERNAME, DBPASSWORD, DBNAME);
+    require_once "{$_SERVER['DOCUMENT_ROOT']}/SQLProject/util/SQLConnection.php";
+    use SQLProject\util\SQLConnection;
 
-    if ($db === false) {
+    $wrappedConnection = (new SQLConnection())->connect();
+    $db = $wrappedConnection->selectDatabase(DATABASE);
+
+    $db = $wrappedConnection->connection;
+
+    if (!$wrappedConnection->isConnected()) {
         die("Error: connection error. " . mysqli_connect_error());
     }
