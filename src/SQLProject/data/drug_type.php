@@ -88,6 +88,7 @@
     }
 
     $result = $connection->insert('Drug_Types', $id, $drug_id, $desc);
+
     if (!$result) {
         $error = $connection->getException();
         $payload['code'] = $error->getCode();
