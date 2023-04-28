@@ -1,7 +1,8 @@
 <?php
     header("Content-Type: application/json; charset=UTF-8");
-    if ($_SERVER["REQUEST_METHOD"] != "POST") {
+    if ($_SERVER["REQUEST_METHOD"] != "POST" || $_POST['func'] == null) {
         echo json_encode([]);
+        exit();
     }
 
     require_once "{$_SERVER['DOCUMENT_ROOT']}/SQLProject/util/SQLConnection.php";
@@ -9,7 +10,7 @@
     use SQLProject\util\SQLConnection;
 
     function orDefault(string $var, $default = null, $mutator = null) {
-        $temp = $_POST[$var];
+        $temp = $_POST[$var] ?? null;
         return ($temp == null || $temp == '') ? $default : (($mutator == null) ? $temp : $mutator->__invoke($temp));
     }
 
@@ -61,7 +62,7 @@
     $eId       = orDefault('eId'      , '', function($val) use (&$params) {$params[] = "employeeId=$val";});
     $count     = orDefault('count'    , '', function($val) use (&$params) {$params[] = "count=$val";});
     $refills   = orDefault('refills'  , '', function($val) use (&$params) {$params[] = "refills=$val";});
-    $fill_date = orDefault('fill_date', '', function($val) use (&$params) {$params[] = "fill_date=$val";});
+    $fill_date = orDefault('fill_date', '', function($val) use (&$params) {$params[] = "fill_date='$val'";});
 
     $result = $connection->select("Prescriptions", "*", $params);
 

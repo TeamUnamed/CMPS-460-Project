@@ -14,13 +14,6 @@
         PRIMARY KEY (id)
         ";
 
-    const EMPLOYEES_SCHEMA = "
-        id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
-        first_name VARCHAR(16)  NOT NULL,
-        last_name  VARCHAR(16)  NOT NULL,
-        PRIMARY KEY (id)
-        ";
-
     const DRUGS_SCHEMA = "
         id         INT UNSIGNED NOT NULL,
         name       VARCHAR(16)  NOT NULL,
@@ -46,7 +39,7 @@
         PRIMARY KEY (id),
         FOREIGN KEY (customerId) REFERENCES Customers(id),
         FOREIGN KEY (drugId)     REFERENCES Drug_Types(id),
-        FOREIGN KEY (employeeId) REFERENCES Employees(id)
+        FOREIGN KEY (employeeId) REFERENCES Users(id)
         ";
 
     const USERS_SCHEMA = "

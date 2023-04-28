@@ -67,7 +67,6 @@
 
             if ($create_if_null) {
                 $this->connection->query ("CREATE TABLE IF NOT EXISTS Customers (" . CUSTOMERS_SCHEMA . ")");
-                $this->connection->query ("CREATE TABLE IF NOT EXISTS Employees (" . EMPLOYEES_SCHEMA . ")");
                 $this->connection->query ("CREATE TABLE IF NOT EXISTS Drugs (" . DRUGS_SCHEMA . ")");
                 $this->connection->query ("CREATE TABLE IF NOT EXISTS Drug_Types (" . DRUG_TYPES_SCHEMA . ")");
                 $this->connection->query ("CREATE TABLE IF NOT EXISTS Prescriptions (" . PRESCRIPTIONS_SCHEMA . ")");

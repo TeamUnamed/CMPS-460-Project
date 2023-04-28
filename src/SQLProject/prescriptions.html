@@ -5,7 +5,7 @@
     <title>Edit Prescriptions</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="user/session_hook.php"></script>
-    <script src="../navbarInclude.js"></script>
+    <script src="navbarInclude.js"></script>
 
     <script>requireSession()</script>
 
@@ -20,7 +20,6 @@
         <label>Prescription ID: <input type='number' name='pId'     placeholder="0" min="0"/></label> <br>
         <label>Customer ID:     <input type='number' name='cId'     placeholder="0" min="0"/></label> <br>
         <label>Drug Type ID:    <input type='number' name='dId'     placeholder="0" min="0"/></label> <br>
-        <label>Employee ID:     <input type='number' name='eId'     placeholder="0" min="0"/></label> <br>
         <label>Count:           <input type='number' name='count'   placeholder="0" min="0"/></label> <br>
         <label>Refills:         <input type='number' name='refills' placeholder="0" min="0"/></label> <br>
         <label>Fill Date:       <input type='date'   name='fill_date'  /></label> <br>
@@ -48,6 +47,18 @@
             if (response['data'] == null) {
                 console.log("Error: No Data");
             } else {
+                if (response == null) {
+                    console.log("Error: No Response");
+                    return;
+                }
+
+                console.log(response);
+
+                if (response['data'] == null) {
+                    console.log("Error: No Data");
+                    return;
+                }
+
                 let data = response['data'];
 
                 let table = $("#result_table");
@@ -76,7 +87,7 @@
         e.preventDefault();
         const form = $(e.target);
         const data_form = $('#data_form');
-        const args = form.serialize() + "&" + data_form.serialize();
+        const args = form.serialize() + "&" + data_form.serialize() + "&eId=" + session['userid'];
 
         console.log(args);
 
