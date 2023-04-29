@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $query->close();
 
     if(isset($result) && $result === true){
-        redirect("index.html");
+        redirect("login.php", true);
     }
 
     mysqli_close($db);
